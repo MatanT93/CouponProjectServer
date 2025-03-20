@@ -5,7 +5,44 @@ The system includes JWT authentication and role-based access control.
 
 ## System Architecture
 
-![System Architecture](src/main/resources/flowcharts/SystemArchitecture.puml)
+The Coupon Management System follows a layered architecture pattern, implementing separation of concerns through distinct layers that handle specific aspects of the application. The system is built using Spring Boot and follows REST architectural principles.
+
+### Layers
+
+#### Client Layer
+- Handles incoming HTTP requests from web browsers, mobile apps, and external systems
+- Implements CORS policies for cross-origin resource sharing
+- Manages initial request validation
+
+#### Security Layer
+- JWT-based authentication filter for request validation
+- Token management system for handling active sessions
+- CORS filter for securing cross-origin requests
+
+#### Controller Layer
+- Auth Controller: Manages authentication and user sessions
+- Admin Controller: Handles administrative operations
+- Company Controller: Manages company-specific operations
+- Customer Controller: Handles customer interactions
+
+#### Service Layer
+- Implements business logic and validation rules
+- Manages transactions and data consistency
+- Includes specialized services for admin, company, and customer operations
+- Runs background jobs for coupon expiration
+
+#### Repository Layer
+- Provides data access abstractions
+- Implements JPA repositories for all entities
+- Manages database operations and queries
+
+#### Database Layer
+- MySQL database storing all system entities
+- Maintains referential integrity between tables
+- Implements necessary indexes and constraints
+
+### Data Flow
+Requests flow through the layers in a structured manner: Client → Security → Controller → Service → Repository → Database, with responses following the reverse path. Each layer adds its specific value while maintaining separation of concerns.
 
 ## Features
 
