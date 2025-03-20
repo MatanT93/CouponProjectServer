@@ -86,10 +86,12 @@ Requests flow through the layers in a structured manner: Client → Security →
 1. Clone the repository:
    git clone [https://github.com/MatanT93/CouponProjectServer]
 2. Configure MySQL database in `application.properties`:
+   ```
    spring.datasource.ur l=jdbc:mysql://local host:3306/CouponsDB
    spring.datasource.username=root
    spring.datasource.password=1234
-3. Build the project:
+   ```
+4. Build the project:
    mvn clean install
 
 ## API Endpoints
