@@ -1,0 +1,109 @@
+@startuml System Architecture
+
+skinparam backgroundColor white
+skinparam componentStyle rectangle
+skinparam packageStyle rectangle
+
+' Color definitions
+skinparam component {
+    BackgroundColor<<Client>> #A9DCDF
+    BackgroundColor<<Security>> #FFD700
+    BackgroundColor<<Controller>> #90EE90
+    BackgroundColor<<Service>> #FFB6C1
+    BackgroundColor<<Repository>> #DDA0DD
+    BackgroundColor<<Database>> #87CEEB
+}
+
+' Layout
+top to bottom direction
+
+' Client Layer
+package "Client Layer" {
+    component "Web Browser" as Browser <<Client>>
+    component "Mobile App" as Mobile <<Client>>
+    component "External Systems" as External <<Client>>
+}
+
+' Security Layer
+package "Security Layer" {
+    component "JWT Filter" as JWTFilter <<Security>>
+    component "Token Manager" as TokenManager <<Security>>
+    component "CORS Filter" as CORSFilter <<Security>>
+}
+
+' Controller Layer
+package "Controller Layer" {
+    component "Auth Controller" as AuthController <<Controller>>
+    component "Admin Controller" as AdminController <<Controller>>
+    component "Company Controller" as CompanyController <<Controller>>
+    component "Customer Controller" as CustomerController <<Controller>>
+}
+
+' Service Layer
+package "Service Layer" {
+    component "Client Service" as ClientService <<Service>>
+    component "Admin Service" as AdminService <<Service>>
+    component "Company Service" as CompanyService <<Service>>
+    component "Customer Service" as CustomerService <<Service>>
+    component "Daily Job Service" as DailyJobService <<Service>>
+}
+
+' Repository Layer
+package "Repository Layer" {
+    component "Category Repository" as CategoryRepo <<Repository>>
+    component "Company Repository" as CompanyRepo <<Repository>>
+    component "Coupon Repository" as CouponRepo <<Repository>>
+    component "Customer Repository" as CustomerRepo <<Repository>>
+    component "CustomerVSCoupon Repository" as CustomerVSCouponRepo <<Repository>>
+}
+
+' Database Layer
+database "MySQL Database" {
+    component "Categories Table" as CategoriesTable <<Database>>
+    component "Companies Table" as CompaniesTable <<Database>>
+    component "Coupons Table" as CouponsTable <<Database>>
+    component "Customers Table" as CustomersTable <<Database>>
+    component "CustomerVSCoupons Table" as CustomerVSCouponsTable <<Database>>
+}
+
+' Relationships
+Browser --> JWTFilter
+Mobile --> JWTFilter
+External --> JWTFilter
+
+JWTFilter --> TokenManager
+CORSFilter --> AuthController
+
+AuthController --> TokenManager
+AuthController --> AdminService
+AuthController --> CompanyService
+AuthController --> CustomerService
+
+' Controller to Service relationships
+AdminController --> AdminService
+CompanyController --> CompanyService
+CustomerController --> CustomerService
+
+' Service Layer relationships
+ClientService <-- AdminService
+ClientService <-- CompanyService
+ClientService <-- CustomerService
+
+' Service to Repository relationships
+AdminService --> CategoryRepo
+AdminService --> CompanyRepo
+AdminService --> CustomerRepo
+CompanyService --> CouponRepo
+CustomerService --> CustomerVSCouponRepo
+
+' Repository to Database relationships
+CategoryRepo --> CategoriesTable
+CompanyRepo --> CompaniesTable
+CouponRepo --> CouponsTable
+CustomerRepo --> CustomersTable
+CustomerVSCouponRepo --> CustomerVSCouponsTable
+
+' Daily Job relationship
+DailyJobService --> CouponRepo
+
+@enduml

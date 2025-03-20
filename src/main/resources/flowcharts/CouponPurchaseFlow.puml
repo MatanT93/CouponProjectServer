@@ -1,0 +1,46 @@
+@startuml Coupon Purchase Flow
+
+!theme plain
+skinparam backgroundColor white
+skinparam handwritten false
+
+start
+
+:Customer selects coupon to purchase;
+
+partition "Customer Controller" {
+    :Validate JWT Token;
+    :Get Customer ID from Token;
+    
+    :Send purchase request to Customer Service;
+}
+
+partition "Customer Service" {
+    :Check if coupon already purchased;
+    if (Already purchased?) then (yes)
+        :Throw CouponOutOfStockException;
+        stop
+    endif
+
+    :Check coupon amount;
+    if (Amount > 0?) then (yes)
+        :Check coupon expiration date;
+        if (Expired?) then (yes)
+            :Throw CouponOutOfStockException;
+            stop
+        else (no)
+            :Create CustomerVSCoupon record;
+            :Decrease coupon amount by 1;
+            :Save changes to database;
+        endif
+    else (no)
+        :Throw CouponOutOfStockException;
+        stop
+    endif
+}
+
+:Return success response;
+
+stop
+
+@enduml

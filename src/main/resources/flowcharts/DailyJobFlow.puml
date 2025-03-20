@@ -1,0 +1,28 @@
+@startuml Daily Job Flow
+
+!theme plain
+skinparam backgroundColor white
+skinparam handwritten false
+
+start
+
+while (Daily Job Running?) is (yes)
+    :Sleep for 24 hours;
+    
+    partition "Coupon Expiration Job" {
+        :Get current date;
+        :Fetch all coupons;
+        
+        while (More coupons?) is (yes)
+            :Check coupon end date;
+            if (Expired?) then (yes)
+                :Delete from CustomerVSCoupons;
+                :Delete Coupon;
+            endif
+        endwhile
+    }
+endwhile (no)
+
+stop
+
+@enduml

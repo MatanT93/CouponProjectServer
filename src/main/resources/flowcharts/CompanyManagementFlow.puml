@@ -1,0 +1,59 @@
+@startuml Company Management Flow
+
+!theme plain
+skinparam backgroundColor white
+skinparam handwritten false
+
+start
+
+partition "Admin Controller" {
+    switch (Operation)
+        case (Add Company)
+            :Validate company details;
+            if (Company name or email already exists?) then (yes)
+                :Throw NameAlreadyExistException;
+                stop
+            else (no)
+                :Save new company;
+            endif
+            
+        case (Update Company)
+            :Validate company ID;
+            if (Company exists?) then (yes)
+                if (Company name unchanged?) then (yes)
+                    :Update company details;
+                else (no)
+                    :Throw WrongDetailsException;
+                    stop
+                endif
+            else (no)
+                :Throw ResourceNotFoundException;
+                stop
+            endif
+            
+        case (Delete Company)
+            :Find company by ID;
+            if (Company exists?) then (yes)
+                :Delete related coupons;
+                :Delete company;
+            else (no)
+                :Throw ResourceNotFoundException;
+                stop
+            endif
+            
+        case (Get Company)
+            :Find company by ID;
+            if (Company exists?) then (yes)
+                :Return company details;
+            else (no)
+                :Throw ResourceNotFoundException;
+                stop
+            endif
+    endswitch
+}
+
+:Return response;
+
+stop
+
+@enduml

@@ -1,0 +1,67 @@
+@startuml Authentication Flow
+
+!theme plain
+skinparam backgroundColor white
+skinparam handwritten false
+
+start
+
+:Client sends login request with 
+email, password, and client type;
+
+partition "Authentication Controller" {
+  :Validate request body;
+  
+  switch (Client Type)
+    case (Admin)
+      if (email == admin@admin.com && 
+          password == admin) then (yes)
+        :Set Admin privileges;
+        :Generate JWT Token;
+      else (no)
+        :Return 401 Unauthorized;
+        stop
+      endif
+      
+    case (Company)
+      :Check Company Repository;
+      if (Company exists) then (yes)
+        :Validate credentials;
+        if (credentials valid) then (yes)
+          :Set Company ID;
+          :Set Company privileges;
+          :Generate JWT Token;
+        else (no)
+          :Return 401 Unauthorized;
+          stop
+        endif
+      else (no)
+        :Return 401 Unauthorized;
+        stop
+      endif
+      
+    case (Customer)
+      :Check Customer Repository;
+      if (Customer exists) then (yes)
+        :Validate credentials;
+        if (credentials valid) then (yes)
+          :Set Customer ID;
+          :Set Customer privileges;
+          :Generate JWT Token;
+        else (no)
+          :Return 401 Unauthorized;
+          stop
+        endif
+      else (no)
+        :Return 401 Unauthorized;
+        stop
+      endif
+  endswitch
+}
+
+:Add Token to Active Tokens List;
+:Return JWT Token in Response;
+
+stop
+
+@enduml

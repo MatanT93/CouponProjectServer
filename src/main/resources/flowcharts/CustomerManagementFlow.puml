@@ -1,0 +1,54 @@
+@startuml Customer Management Flow
+
+!theme plain
+skinparam backgroundColor white
+skinparam handwritten false
+
+start
+
+partition "Admin Controller" {
+    switch (Operation)
+        case (Add Customer)
+            :Validate customer details;
+            if (Email exists?) then (yes)
+                :Throw NameAlreadyExistException;
+                stop
+            else (no)
+                :Save new customer;
+            endif
+            
+        case (Update Customer)
+            :Validate customer ID;
+            if (Customer exists?) then (yes)
+                :Update customer details;
+            else (no)
+                :Throw ResourceNotFoundException;
+                stop
+            endif
+            
+        case (Delete Customer)
+            :Find customer by ID;
+            if (Customer exists?) then (yes)
+                :Delete purchased coupons;
+                :Delete customer;
+            else (no)
+                :Throw ResourceNotFoundException;
+                stop
+            endif
+            
+        case (Get Customer)
+            :Find customer by ID;
+            if (Customer exists?) then (yes)
+                :Return customer details;
+            else (no)
+                :Throw ResourceNotFoundException;
+                stop
+            endif
+    endswitch
+}
+
+:Return response;
+
+stop
+
+@enduml
