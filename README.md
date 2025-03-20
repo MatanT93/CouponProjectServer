@@ -5,7 +5,7 @@ The system includes JWT authentication and role-based access control.
 
 ## System Architecture
 
-![System Architecture](src/main/resources/flowcharts/SystemArchitecture.png)
+![System Architecture](src/main/resources/flowcharts/SystemArchitecture.puml)
 
 ## Features
 
